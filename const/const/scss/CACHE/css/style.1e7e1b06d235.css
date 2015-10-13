@@ -1,0 +1,21 @@
+#logo-container {
+  color: black; }
+
+nav ul a {
+  color: black; }
+
+.front-white {
+  color: white; }
+
+footer.page-footer {
+  margin: 0;
+  padding: 0; }
+
+header, main, footer {
+  padding-left: 240px; }
+
+@media only screen and (max-width: 992px) {
+  header, main, footer {
+    padding-left: 0; } }
+
+/*# sourceMappingURL=tmpksiyv21p.css.map */

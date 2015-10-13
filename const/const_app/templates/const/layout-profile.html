@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+{% load compress %}
+{% load staticfiles %}
+
+<html>
+    <head lang="en">
+      <link rel="stylesheet" type="text/css" href="{% static 'parallax/css/materialize.css' %}" />
+      <link rel="stylesheet" type="text/css" href="{% static 'font-awesome-4.4.0/css/font-awesome.css' %}" />
+      {% compress css %}
+        <link rel="stylesheet" type="text/scss" href="{% static 'css/style.scss' %}" />
+      {% endcompress %}
+      <meta charset="UTF-8">
+      <title>Constitución</title>
+
+    </head>
+
+    <body>
+      <header>
+      <nav class="top-nav top-nav-profile teal">
+        <div class="container">
+          <a href="#" data-activates="slide-out" class="button-collapse"><i class="fa fa-bars"></i></a>
+          <div class="nav-wrapper"><a class="page-title">Profile</a></div>
+        </div>
+      </nav>
+      <ul id="slide-out" class="side-nav fixed">
+        <li><a href="#!">First Sidebar Link</a></li>
+        <li><a href="#!">Second Sidebar Link</a></li>
+      </ul>
+
+    </header>
+    {% block body_block %}{% endblock %}
+    </body>
+
+    <footer class="page-footer teal">
+      <div class="footer-copyright ">
+        <div class="container footer-profile">
+        Made by Best Grupo EVER DDS
+        </div>
+      </div>
+    </footer>
+
+    <script type="text/javascript" src="{% static 'js/jquery-2.1.4.js' %}"></script>
+    <script type="text/javascript" src="{% static 'parallax/js/materialize.js' %}"></script>
+    <script type="text/javascript" src="{% static 'parallax/js/init.js' %}"></script>
+
+</html>

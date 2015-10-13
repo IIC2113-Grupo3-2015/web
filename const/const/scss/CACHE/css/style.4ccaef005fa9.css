@@ -1,0 +1,33 @@
+#logo-container {
+  color: black; }
+
+nav ul a {
+  color: black; }
+
+.front-white {
+  color: white; }
+
+footer.page-footer {
+  margin-top: 0;
+  padding-top: 0; }
+
+.top-nav-profile {
+  padding-left: 100px; }
+
+.button-collapse {
+  padding-right: 20px; }
+
+.container-profile {
+  padding-left: 100px; }
+
+.footer-profile {
+  padding-left: 100px; }
+
+footer {
+  clear: both;
+  position: relative;
+  z-index: 10;
+  height: 3em;
+  margin-top: -3em; }
+
+/*# sourceMappingURL=tmpkss6j06h.css.map */

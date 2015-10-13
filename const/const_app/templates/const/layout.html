@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+{% load compress %}
+{% load staticfiles %}
+
+<html>
+    <head lang="en">
+      <link rel="stylesheet" type="text/css" href="{% static 'parallax/css/materialize.css' %}" />
+      <link rel="stylesheet" type="text/css" href="{% static 'font-awesome-4.4.0/css/font-awesome.css' %}" />
+      {% compress css %}
+        <link rel="stylesheet" type="text/scss" href="{% static 'css/style.scss' %}" />
+      {% endcompress %}
+      <meta charset="UTF-8">
+      <title>Constitución</title>
+    </head>
+
+    <nav class="super-nav white" role="navigation">
+      <div class="nav-wrapper container">
+        <a id="logo-container" href="#" class="brand-logo">Constitución.cl</a>
+
+        <ul class="right hide-on-med-and-down">
+          <li><a href="#!">First Sidebar Link</a></li>
+          <li><a href="#!">Second Sidebar Link</a></li>
+          <li><a class="dropdown-button" href="#!" data-activates="dropdown1">Dropdown<i class="mdi-navigation-arrow-drop-down right"></i></a></li>
+          <ul id='dropdown1' class='dropdown-content'>
+            <li><a href="#!">First</a></li>
+            <li><a href="#!">Second</a></li>
+            <li><a href="#!">Third</a></li>
+            <li><a href="#!">Fourth</a></li>
+          </ul>
+        </ul>
+        <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+      </div>
+    </nav>
+
+    <body>
+      {% block body_block %}{% endblock %}
+    </body>
+
+    <footer class="page-footer teal">
+      <div class="footer-copyright">
+        <div class="container">
+        Made by Best Grupo EVER DDS
+        </div>
+      </div>
+    </footer>
+
+    <script type="text/javascript" src="{% static 'js/jquery-2.1.4.js' %}"></script>
+    <script type="text/javascript" src="{% static 'parallax/js/materialize.js' %}"></script>
+    <script type="text/javascript" src="{% static 'parallax/js/init.js' %}"></script>
+
+</html>
