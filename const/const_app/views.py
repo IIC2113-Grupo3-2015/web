@@ -1,10 +1,14 @@
 from django.shortcuts import render
+from django.http import HttpResponse, HttpResponseRedirect
+from django.template.context_processors import csrf
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+import json
 
 def index(request):
     # Este método es llamado cada vez que se necesita ir a la página de
     # bienvenida. No necesita login.
-    context = {}
-    return render(request, 'const/index.html', context)
+    return HttpResponse("Holi")
     # Después de la llamada, la página es cambiada por la de bienvenida.
 
 def main_page(request):
@@ -14,18 +18,22 @@ def main_page(request):
     # El método renderea la página junto a un diccionario, en el que
     # se envían los valores requeridos por la página desde la base de datos.
 
-def profile_page(request, user_id):
+@login_required
+def user_profile(request):
     # Este método es llamado cuando se quiere acceder al perfil de un usuario.
     # Necesita de un usuario con login que coincida con la url.
     # Además el id del usuario debe estar explícito en la url
-    pass
+    user = request.user
+    context = {"user": user}
+    return render(request, 'const/profile.html', context)
     # El método te lleva al perfil del usuario
 
-def candidate_profile_page(request, user_id):
+def candidate_profile_page(request):
     # Este método se llama cuando se quiere ir a la página de un candidato
     # usando una cuenta de candidato. Se debe estar logeado con el usuario
     # respectivo.
-    pass
+    context = {}
+    return render(request, 'const/candidate.html', context)
     # # El método te lleva al perfil del usuario candidato
 
 def create_post_entry(request):
@@ -78,16 +86,33 @@ def config_page(request, user_id):
     pass
     # Es posible ingresar a la página de configuraciones si se está logeado.
 
-def login(request):
-    # Se ejecuta cuando un usuario quiere logearse
-    pass
-    # El usuario queda logeado.
+def user_login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username=username, password=password)
+        if user:
+            if user.is_active:
+                login(request, user)
+                return  HttpResponse(
+                        json.dumps({'redirect': "/profile/"}),
+                        content_type="application/json"
+                                    )
+            else:
+                return HttpResponse("Your const account is disabled.")
+        else:
+            return HttpResponse(
+                    json.dumps({}),
+                    content_type="application/json"
+                                )
 
-def logout(request):
-    # Se ejecuta cuando el usuario quiere cerrar sesión.
-    # El usuario debe estar logeado.
-    pass
-    # El usuario cierra su sesión.
+    else:
+        return render(request, 'const/login.html', {})
+
+@login_required
+def user_logout(request):
+    logout(request)
+    return HttpResponseRedirect('/')
 
 def register(request):
     # Se ejecuta cuando se registra un nuevo usuario en el sistema.

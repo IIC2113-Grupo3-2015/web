@@ -1,37 +1,42 @@
-#logo-container {
-  color: black;
+#view-source {
+  position: fixed;
+  display: block;
+  right: 0;
+  bottom: 0;
+  margin-right: 40px;
+  margin-bottom: 40px;
+  z-index: 900;
 }
 
-nav ul a {
-  color: black;
+.profile-image {
+  width: 170px;
+  height: 170px;
 }
 
-.front-white {
-  color: white;
+.profile-name {
+  float: left;
+  margin: 10px;
 }
 
-footer.page-footer {
-  margin-top: 0;
-  padding-top: 0;
+.profile-container {
+  padding: 5px;
+  background-color: white;
+  width: 170px;
+  height: 170px;
+  float: left;
 }
 
-
-.top-nav-profile {
-  padding-left: 100px;
+.login-card {
+  padding: 10px;
+  width: auto;
 }
 
-.button-collapse {
-  padding-right: 20px;
-}
-
-.container-profile {
-  padding-left: 100px;
-}
-
-.footer-profile {
-  padding-left: 100px;
-}
-
-body {
-  height: 100vh;
+.failed-login {
+  width: auto;
+  min-height: 0px;
+  padding-top: 5px;
+  height: 30px !important;
+  background-color: #E53935;
+  color: #E3F2FD;
+  text-align: center;
 }
