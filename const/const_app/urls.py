@@ -8,4 +8,6 @@ urlpatterns = [
     url(r'^login/$', views.user_login, name='login'),
     url(r'^logout/$', views.user_logout, name='logout'),
     url(r'^profile/user/(?P<user_id>[\d]+)/$', views.user_profile, name='profile'),
+    url(r'^post/(?P<post_id>[\d]+)/$', views.view_post, name='view_post'),
+    url(r'^create_comment/$', views.create_comment, name='create_comment'),
 ]

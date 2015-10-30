@@ -10,6 +10,7 @@ class UserProfile(models.Model):
     follows = models.ManyToManyField('self', through='PairData', symmetrical=False)
     picture = models.ImageField(upload_to='profile_images', blank = True)
     role = models.CharField(max_length = 50)
+    about = models.TextField()
 
     def __str__(self):
         return self.user.username
@@ -21,11 +22,13 @@ class PairData(models.Model):
 class Like(models.Model):
     pass
 
-class Comment(models.Model):
-    pass
-
 class Post(models.Model):
     post_title = models.TextField()
     post_text = models.TextField()
     post_author = models.ForeignKey(User)
     pub_date = models.DateTimeField('date published')
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post)
+    user = models.ForeignKey(User)
+    content = models.TextField()

@@ -1,0 +1,80 @@
+{% extends 'const/layout.html' %}
+
+{% block body_block %}
+
+    {% load markdown_deux_tags %}
+
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+      <header id="post-header" data-postid="{{ post.id }}" class="mdl-layout__header mdl-layout__header--scroll mdl-color--primary">
+        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
+        </div>
+        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
+          <div class="profile-name">
+            <h3>
+              Post de {{user.username}}
+            </h3>
+            <h5>
+              {{post.post_title}}
+            </h5>
+          </div>
+        </div>
+        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
+        </div>
+      </header>
+      <main class="mdl-layout__content">
+        <div class="mdl-layout__tab-panel is-active" id="overview">
+          <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+            <div class="mdl-card mdl-cell mdl-cell--12-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone">
+              <div class="mdl-card__supporting-text">
+                {{ post.post_text | markdown:"STYLE" }}
+              </div>
+            </div>
+          </section>
+          {% if has_comments %}
+            <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+              <div class="mdl-card mdl-cell mdl-cell--12-col">
+                <div id="comments" class="mdl-card__supporting-text mdl-grid mdl-grid--no-spacing">
+                  <h4 class="mdl-cell mdl-cell--12-col"> <i class="fa fa-commenting-o"></i> Comentarios</h4>
+                  {% for comment in comments %}
+                    <div class="section__circle-container mdl-cell mdl-cell--1-col mdl-cell--1-col-phone">
+                      <div class="section__circle-container__circle">
+                        <img class="comment-image profile-image" src="{{ user.userprofile.picture.url }}" alt="Mountain View"> </img>
+                      </div>
+                    </div>
+                    <div class="comment section__text mdl-cell mdl-cell--11-col-desktop mdl-cell--6-col-tablet mdl-cell--3-col-phone">
+                      {{ comment.content | safe}}
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </section>
+          {% endif %}
+          <section class="section--center mdl-grid mdl-grid--no-spacing">
+            <div class="mdl-card mdl-cell mdl-cell--6-col mdl-shadow--2dp">
+              <div class="mdl-card__supporting-text">
+
+                <h4> <i class="fa fa-pencil"></i> Comentar</h4>
+                <div class="mdl-textfield mdl-js-textfield">
+                  <textarea id="comment-box" class="mdl-textfield__input" type="text" rows= "3"></textarea>
+                  <label class="mdl-textfield__label" for="sample5">Text lines...</label>
+                </div>
+              </div>
+              <div class="mdl-card__actions">
+                <a href="#" id="make-post" class="mdl-button">Ok</a>
+              </div>
+            </div>
+          </section>
+        </div>
+        <br>
+
+        <footer class="mdl-mega-footer">
+          <div class="mdl-mega-footer--bottom-section">
+            <div class="mdl-logo">
+              Made by Grupo 3 DDS
+            </div>
+          </div>
+        </footer>
+      </main>
+    </div>
+
+{% endblock %}

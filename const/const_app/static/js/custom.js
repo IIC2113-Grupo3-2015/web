@@ -45,12 +45,44 @@ $(function() {
       window.location.href = "/profile/user/" + data;
   });
 
-  $('#refresh-cand').on('click', function(event){
+  $('#make-post').on('click', function(event){
       event.preventDefault();
-      var data = $('#refresh-cand').data('userid');
-      console.log(data)
-      window.location.href = "/candidate/user/" + data;
+      console.log("form submitted!")  // sanity check
+      create_post();
   });
+
+  function create_post() {
+    var post_id = $('#post-header').data('postid');
+    console.log("create post is working!") // sanity check
+    $.ajax({
+        url : "/create_comment/",
+        type : "POST",
+        data : { content: $('#comment-box').val(), pid: post_id},
+        success : function(json) {
+            $('#text_area_post').val(''); // remove the value from the input
+            console.log(json); // log the returned json to the console
+            $("#comments").append('\
+              <div class="section__circle-container mdl-cell mdl-cell--1-col mdl-cell--1-col-phone"> \
+              <div class="section__circle-container__circle"> \
+                <img class="comment-image profile-image" src="' + json.userImage + '" alt="Mountain View"> </img> \
+              </div>\
+            </div>\
+            <div class="comment section__text mdl-cell mdl-cell--11-col-desktop mdl-cell--6-col-tablet mdl-cell--3-col-phone"> \
+              ' + json.cont + ' \
+            </div> \
+            ');
+            console.log("success"); // another sanity check
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+                " <a href='#' class='close'>&times;</a></div>");
+            console.log(xhr.status + ": " + xhr.responseText);
+        }
+    });
+  }
+
 
 
   // This function gets cookie with a given name

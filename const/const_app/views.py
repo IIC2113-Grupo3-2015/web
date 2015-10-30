@@ -4,7 +4,11 @@ from django.template.context_processors import csrf
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from .models import Post, Comment
+import pygal
+from pygal.style import Style
 import json
+from random import randint
 
 def index(request):
     # Este método es llamado cada vez que se necesita ir a la página de
@@ -41,14 +45,39 @@ def candidate_profile_page(request, user_id):
     required_user = User.objects.get(id = user_id)
     if required_user.userprofile.role != 'candidate':
         return HttpResponse("Error")
+
+    print(request.user.id)
+    print(required_user.id)
     is_self_user = required_user.id == request.user.id
     posts = required_user.post_set.all()
-    context = {'required_user': required_user, 'is_self_user': is_self_user,
-                'posts': posts}
-    return render(request, 'const/candidate.html', context)
-    # # El método te lleva al perfil del usuario candidato
 
-def create_post_entry(request):
+    # Gráfico
+    s = Style(colors=('#5DA5DA', '#000000'))
+    radar_chart = pygal.Radar(style = s)
+    radar_chart.title = 'Emociones'
+    radar_chart.x_labels = ['Emoción Positiva', 'Emoción Negativa',
+                            'Swear', 'Furia', 'Tristeza']
+    radar_chart.add('Candidato', list(randint(1,10) for i in range(5)))
+    g = radar_chart.render(fill = True)
+
+    context = {'required_user': required_user, 'is_self_user': is_self_user,
+                'posts': posts, 'graph': g}
+    return render(request, 'const/candidate.html', context)
+    # El método te lleva al perfil del usuario candidato
+
+@login_required
+def view_post(request, post_id):
+    post = Post.objects.get(id = post_id)
+    username = post.post_author.username
+    comments = post.comment_set.all()
+    has_comments = len(comments) > 0
+    print("HC", has_comments)
+    context = {'post': post, 'username': username, 'comments': comments,
+            'has_comments': has_comments}
+    return render(request, 'const/post.html', context)
+
+@login_required
+def create_post(request):
     # El usuario candidato ejecuta esta función cuando añade un nuevo post
     # en su entrada. El usuario que realiza el request queda registrado
     # como autor del post. Los datos son pasados mediante POST HTTP.
@@ -62,11 +91,23 @@ def delete_post_entry(request):
     pass
     # Se elimina el post de la DB.
 
-def comment_post(request):
+@login_required
+def create_comment(request):
     # El usuario ejecuta esta función al comentar en un post de un candidato.
     # Se genera un comentario asociado al post visible para todos los usuarios.
     # Se requiere login. Los valores se pasan mediante POST HTTP.
-    pass
+    if request.method == 'POST':
+        post = Post.objects.get(id = request.POST.get('pid'))
+        content = request.POST.get('content').replace("\n", "<br>")
+        myComment = Comment(post = post,
+                    content = content,
+                    user = request.user)
+        myComment.save()
+        userImage = request.user.userprofile.picture.url
+    return HttpResponse(
+                    json.dumps({'cont': content, 'userImage': userImage}),
+                    content_type="application/json"
+                        )
     # El post queda guardado en la db.
 
 def delete_post(request):
@@ -107,6 +148,14 @@ def user_login(request):
             if user.is_active:
                 login(request, user)
                 uid = user.id
+                if user.userprofile.role == 'candidate':
+                    return  HttpResponse(
+                            json.dumps({'redirect': "/candidate/user/" +
+                            str(uid)}), content_type="application/json")
+                else:
+                    return  HttpResponse(
+                            json.dumps({'redirect': "/profile/user/" +
+                            str(uid)}), content_type="application/json")
                 return  HttpResponse(
                         json.dumps({'redirect': "/profile/user/" + str(uid)}),
                         content_type="application/json"
