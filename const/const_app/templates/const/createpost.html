@@ -1,0 +1,51 @@
+{% extends 'const/layout.html' %}
+
+{% block body_block %}
+
+    {% load markdown_deux_tags %}
+
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+      <header id="createpost-header" data-userid="{{ user.id }}" class="mdl-layout__header mdl-layout__header--scroll mdl-color--primary">
+        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
+        </div>
+        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
+          <div class="profile-name">
+            <h3>
+              Crear Post {{user.username}}
+            </h3>
+          </div>
+        </div>
+        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
+        </div>
+      </header>
+      <main class="mdl-layout__content">
+        <br>
+          <section class="section--center mdl-grid mdl-grid--no-spacing">
+            <div class="mdl-card mdl-cell mdl-cell--6-col mdl-shadow--2dp">
+              <div class="mdl-card__supporting-text">
+
+                <h4> <i class="fa fa-pencil"></i> Comentar</h4>
+                <div class="mdl-textfield mdl-js-textfield">
+                  <textarea id="post-box-title" class="mdl-textfield__input" type="text" rows= "1">Título</textarea>
+                  <textarea id="post-box" class="mdl-textfield__input" type="text" rows= "3">Contenido</textarea>
+                </div>
+              </div>
+              <div class="mdl-card__actions">
+                <a href="#" id="make-post" class="mdl-button">Ok</a>
+              </div>
+            </div>
+          </section>
+
+        <br>
+
+        <footer class="mdl-mega-footer">
+          <div class="mdl-mega-footer--bottom-section">
+            <div class="mdl-logo">
+              Made by Grupo 3 DDS
+            </div>
+          </div>
+        </footer>
+      </main>
+    </div>
+
+{% endblock %}

@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import Post, Comment
+from django.utils import timezone
 import pygal
 from pygal.style import Style
 import json
@@ -13,7 +14,7 @@ from random import randint
 def index(request):
     # Este método es llamado cada vez que se necesita ir a la página de
     # bienvenida. No necesita login.
-    return HttpResponse("Holi")
+    return render(request, 'const/index.html', {})
     # Después de la llamada, la página es cambiada por la de bienvenida.
 
 def main_page(request):
@@ -30,7 +31,13 @@ def user_profile(request, user_id):
     # Además el id del usuario debe estar explícito en la url
     user = request.user
     required_user = User.objects.get(id = user_id)
-    context = {'user': user}
+    candidates = User.objects.all()
+    candidates_posts = []
+    for candidate in candidates:
+        if candidate.username != 'admin' and candidate.userprofile.role == 'candidate':
+            for post in candidate.post_set.all():
+                candidates_posts.append(post)
+    context = {'user': user, 'posts': candidates_posts}
     if user.id != int(user_id) or user.userprofile.role == 'candidate':
         return HttpResponse("Error")
     return render(request, 'const/profile.html', context)
@@ -81,7 +88,32 @@ def create_post(request):
     # El usuario candidato ejecuta esta función cuando añade un nuevo post
     # en su entrada. El usuario que realiza el request queda registrado
     # como autor del post. Los datos son pasados mediante POST HTTP.
-    pass
+    if request.method == 'POST':
+        content = request.POST.get('content')
+        title = request.POST.get('title').replace("\n", " ")
+
+        if request.user.userprofile.role == 'candidate':
+            myPost = Post(post_title = title,
+                        post_text = content,
+                        post_author = request.user,
+                        pub_date = timezone.now())
+            myPost.save()
+        userImage = request.user.userprofile.picture.url
+        return HttpResponse(
+                        json.dumps({}),
+                        content_type="application/json"
+                            )
+    # El post es guardado en la base de datos
+
+@login_required
+def create_post_page(request):
+    # El usuario candidato ejecuta esta función cuando añade un nuevo post
+    # en su entrada. El usuario que realiza el request queda registrado
+    # como autor del post. Los datos son pasados mediante POST HTTP.
+    if request.user.userprofile.role != 'candidate':
+        return HttpResponse("Error")
+    context = {'user': request.user}
+    return render(request, 'const/createpost.html', context)
     # El post es guardado en la base de datos
 
 def delete_post_entry(request):

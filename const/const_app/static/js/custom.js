@@ -45,13 +45,19 @@ $(function() {
       window.location.href = "/profile/user/" + data;
   });
 
+  $('#make-comment').on('click', function(event){
+      event.preventDefault();
+      console.log("form submitted!")  // sanity check
+      create_comment();
+  });
+
   $('#make-post').on('click', function(event){
       event.preventDefault();
       console.log("form submitted!")  // sanity check
       create_post();
   });
 
-  function create_post() {
+  function create_comment() {
     var post_id = $('#post-header').data('postid');
     console.log("create post is working!") // sanity check
     $.ajax({
@@ -71,6 +77,30 @@ $(function() {
               ' + json.cont + ' \
             </div> \
             ');
+            console.log("success"); // another sanity check
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+                " <a href='#' class='close'>&times;</a></div>");
+            console.log(xhr.status + ": " + xhr.responseText);
+        }
+    });
+  }
+
+  function create_post() {
+    var user_id = $('#createpost-header').data('userid');
+    console.log("create post is working!") // sanity check
+    $.ajax({
+        url : "/create_post/",
+        type : "POST",
+        data : { content: $('#post-box').val(),
+                title:  $('#post-box-title').val()},
+        success : function(json) {
+            $('#text_area_post').val(''); // remove the value from the input
+            console.log(json); // log the returned json to the console
+            window.location.href = "/candidate/user/" + user_id;
             console.log("success"); // another sanity check
         },
 
