@@ -11,7 +11,9 @@
             <img class="profile-image" src="{{ user.userprofile.picture.url }}" alt="Mountain View">
           </div>
           <div class="profile-name">
-            <h3>{{user.username}}</h3>
+            <h3>
+              {{user.username}}
+            </h3>
           </div>
         </div>
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
@@ -19,7 +21,7 @@
         <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
           <a href="#overview" class="mdl-layout__tab is-active">Novedades</a>
           <a href="#config" class="mdl-layout__tab">Configuración</a>
-          <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--accent" id="refresh">
+          <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--accent" id="refresh-prof" data-userid="{{ user.id }}">
             <i class="fa fa-refresh"></i>  <!-- bell -->
             <span class="visuallyhidden">Add</span>
           </button>

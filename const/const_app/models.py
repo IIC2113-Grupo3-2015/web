@@ -25,6 +25,7 @@ class Comment(models.Model):
     pass
 
 class Post(models.Model):
+    post_title = models.TextField()
     post_text = models.TextField()
     post_author = models.ForeignKey(User)
     pub_date = models.DateTimeField('date published')

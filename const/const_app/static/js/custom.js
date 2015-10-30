@@ -37,9 +37,19 @@ $(function() {
       console.log("form submitted!")  // sanity check
       login();
   });
-  $('#refresh').on('click', function(event){
+
+  $('#refresh-prof').on('click', function(event){
       event.preventDefault();
-      window.location.href = "/profile";
+      var data = $('#refresh-prof').data('userid');
+      console.log(data)
+      window.location.href = "/profile/user/" + data;
+  });
+
+  $('#refresh-cand').on('click', function(event){
+      event.preventDefault();
+      var data = $('#refresh-cand').data('userid');
+      console.log(data)
+      window.location.href = "/candidate/user/" + data;
   });
 
 

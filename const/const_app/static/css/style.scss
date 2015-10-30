@@ -40,3 +40,20 @@
   color: #E3F2FD;
   text-align: center;
 }
+
+.mdl-demo section > .section__play-btn {
+    min-height: 100px;
+}
+
+.mdl-card {
+    min-height: 100px;
+    color: black;
+}
+
+.mdl-demo .mdl-card .mdl-card__supporting-text {
+    margin-right: 7px;
+    margin-left: 15px;
+    margin-bottom: 7px;
+    margin-top: 10px;
+
+}

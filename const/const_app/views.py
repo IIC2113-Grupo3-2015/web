@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template.context_processors import csrf
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 import json
 
 def index(request):
@@ -19,20 +20,31 @@ def main_page(request):
     # se envían los valores requeridos por la página desde la base de datos.
 
 @login_required
-def user_profile(request):
+def user_profile(request, user_id):
     # Este método es llamado cuando se quiere acceder al perfil de un usuario.
     # Necesita de un usuario con login que coincida con la url.
     # Además el id del usuario debe estar explícito en la url
     user = request.user
-    context = {"user": user}
+    required_user = User.objects.get(id = user_id)
+    context = {'user': user}
+    if user.id != int(user_id) or user.userprofile.role == 'candidate':
+        return HttpResponse("Error")
     return render(request, 'const/profile.html', context)
     # El método te lleva al perfil del usuario
 
-def candidate_profile_page(request):
+@login_required
+def candidate_profile_page(request, user_id):
     # Este método se llama cuando se quiere ir a la página de un candidato
     # usando una cuenta de candidato. Se debe estar logeado con el usuario
     # respectivo.
-    context = {}
+    user = request.user
+    required_user = User.objects.get(id = user_id)
+    if required_user.userprofile.role != 'candidate':
+        return HttpResponse("Error")
+    is_self_user = required_user.id == request.user.id
+    posts = required_user.post_set.all()
+    context = {'required_user': required_user, 'is_self_user': is_self_user,
+                'posts': posts}
     return render(request, 'const/candidate.html', context)
     # # El método te lleva al perfil del usuario candidato
 
@@ -94,8 +106,9 @@ def user_login(request):
         if user:
             if user.is_active:
                 login(request, user)
+                uid = user.id
                 return  HttpResponse(
-                        json.dumps({'redirect': "/profile/"}),
+                        json.dumps({'redirect': "/profile/user/" + str(uid)}),
                         content_type="application/json"
                                     )
             else:
@@ -118,10 +131,3 @@ def register(request):
     # Se ejecuta cuando se registra un nuevo usuario en el sistema.
     pass
     # El usuario se guarda en la db
-
-def is_candidate(function_from_view):
-    # Decorador que permite ver si un usuario está logeado y
-    # además es candidato.
-    pass
-    # Si no es candidato, no retorna nada. Si es candidato se retorna
-    # la función entregada como parámetro
