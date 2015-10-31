@@ -16,8 +16,10 @@ class UserProfile(models.Model):
         return self.user.username
 
 class PairData(models.Model):
-    common_user = models.ForeignKey(UserProfile, related_name='common_user')
-    candidate_user = models.ForeignKey(UserProfile, related_name='candidate_user')
+    common_user = models.ForeignKey(UserProfile,
+            related_name='common_user')
+    candidate_user = models.ForeignKey(UserProfile,
+            related_name='candidate_user')
 
 class Like(models.Model):
     pass

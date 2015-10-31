@@ -42,10 +42,10 @@
                   <a href="/post/{{ post.id }}" class="mdl-button">Ver más</a>
                 </div>
               </div>
-              <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="btn1">
+              <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="btn{{ forloop.counter }}">
                 <i class="mdi mdi-menu"></i>
               </button>
-              <ul class="mdl-menu mdl-js-menu mdl-menu--bottom-right" for="btn1">
+              <ul class="mdl-menu mdl-js-menu mdl-menu--bottom-right" for="btn{{ forloop.counter }}">
                 <li class="mdl-menu__item">Lorem</li>
                 <li class="mdl-menu__item" disabled>Ipsum</li>
                 <li class="mdl-menu__item">Dolor</li>
