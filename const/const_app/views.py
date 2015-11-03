@@ -60,7 +60,6 @@ def candidate_profile_page(request, user_id):
     posts = required_user.post_set.all()
 
     # Gráfico
-    try:
     pos_host = 'localhost'
     pos_port = 5432
     pos_db = 'scrapper'
