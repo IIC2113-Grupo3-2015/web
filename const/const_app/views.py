@@ -10,6 +10,7 @@ import pygal
 from pygal.style import Style
 import json
 from random import randint
+import psycopg2
 
 def index(request):
     # Este método es llamado cada vez que se necesita ir a la página de
@@ -59,13 +60,39 @@ def candidate_profile_page(request, user_id):
     posts = required_user.post_set.all()
 
     # Gráfico
+    try:
+    pos_host = 'localhost'
+    pos_port = 5432
+    pos_db = 'scrapper'
+    pos_user = 'scrapper'
+    pos_pass = ''
+    
+    conn = psycopg2.connect(database=pos_db, user=pos_user, password=pos_pass, host=pos_host, port=pos_port)
+    cur = conn.cursor()
+    
+    try:
+        cur.execute("SELECT * FROM proms WHERE idcandidato = " + str(required_user.username) + ";")
+        
+        rows = cur.fetchall()
+        
+        labels = []
+        values = []
+        
+        for row in rows:
+            labels.append(row[1])
+            values.append(row[2])
+            
+    except:
+        print("Error")
     s = Style(colors=('#5DA5DA', '#000000'))
     radar_chart = pygal.Radar(style = s)
     radar_chart.title = 'Emociones'
-    radar_chart.x_labels = ['Emoción Positiva', 'Emoción Negativa',
-                            'Swear', 'Furia', 'Tristeza']
-    radar_chart.add('Candidato', list(randint(1,10) for i in range(5)))
+    radar_chart.x_labels = labels
+    radar_chart.add('Candidato', values)
     g = radar_chart.render(fill = True)
+
+    cur.close()
+    conn.close()
 
     context = {'required_user': required_user, 'is_self_user': is_self_user,
                 'posts': posts, 'graph': g}
