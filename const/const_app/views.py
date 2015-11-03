@@ -70,7 +70,7 @@ def candidate_profile_page(request, user_id):
     cur = conn.cursor()
     
     try:
-        cur.execute("SELECT * FROM proms WHERE idcandidato = \"" + str(required_user.username).lower() + "\";")
+        cur.execute("SELECT * FROM proms WHERE idcandidato = '" + str(required_user.username).lower() + "';")
         
         rows = cur.fetchall()
         
