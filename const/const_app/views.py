@@ -64,7 +64,7 @@ def candidate_profile_page(request, user_id):
     pos_port = 5432
     pos_db = 'scrapper'
     pos_user = 'scrapper'
-    pos_pass = ''
+    pos_pass = 'scrapper'
     
     conn = psycopg2.connect(database=pos_db, user=pos_user, password=pos_pass, host=pos_host, port=pos_port)
     cur = conn.cursor()
