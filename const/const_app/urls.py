@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'^create_comment/$', views.create_comment, name='create_comment'),
     url(r'^create_post_page/$', views.create_post_page, name='create_post_page'),
     url(r'^create_post/$', views.create_post, name='create_post'),
+    url(r'^delete_post/$', views.delete_post, name='delete_post'),
 ]

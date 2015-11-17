@@ -57,6 +57,12 @@ $(function() {
       create_post();
   });
 
+  $('.delete-but').on('click', function(event){
+      event.preventDefault();
+      console.log("form submitted!")  // sanity check
+      delete_post();
+  });
+
   function create_comment() {
     var post_id = $('#post-header').data('postid');
     console.log("create post is working!") // sanity check
@@ -113,7 +119,31 @@ $(function() {
     });
   }
 
+  function delete_post() {
+    event.preventDefault();
+    var $this = $(this);
+    var post_id = $this.data('postid');
+    var user_id = $('#createpost-header').data('userid');
+    console.log("create post is working!") // sanity check
+    $.ajax({
+        url : "/delete_post/",
+        type : "POST",
+        data : { post_id: post_id,
+               },
+        success : function(json) {
+            console.log(json); // log the returned json to the console
+            window.location.href = "/candidate/user/" + user_id;
+            console.log("success"); // another sanity check
+        },
 
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+                " <a href='#' class='close'>&times;</a></div>");
+            console.log(xhr.status + ": " + xhr.responseText);
+        }
+    });
+  }
 
   // This function gets cookie with a given name
     function getCookie(name) {

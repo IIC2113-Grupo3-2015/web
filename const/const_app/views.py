@@ -145,7 +145,8 @@ def create_comment(request):
 def delete_post(request):
     # El usuario ejecuta esta función al eliminar un comentario de un post.
     # Se requiere login. Los valores se pasan mediante POST HTTP.
-    pass
+    if request.method == 'POST':
+        print(request.POST.get('post_id'))
     # El post queda eliminado de la db.
 
 def give_stars_comment(request):

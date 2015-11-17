@@ -11,7 +11,7 @@
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
           <div class="profile-name">
             <h3>
-              Post de {{user.username}}
+              Post de {{username}}
             </h3>
             <h5>
               {{post.post_title}}
@@ -42,7 +42,15 @@
                   </div>
                   <div class="comment section__text mdl-cell mdl-cell--11-col-desktop mdl-cell--6-col-tablet mdl-cell--3-col-phone">
                     {{ comment.content | safe}}
+
+                    {% if user.id == comment.user.id %}
+                    <br>
+                    <button data-commentid="{{ comment.id }}" class="delete-comment-button mdl-button mdl-js-button mdl-button--icon mdl-button--colored">
+                      <i class="fa fa-trash"></i>
+                    </button>
+                    {% endif %}
                   </div>
+
                 {% endfor %}
               </div>
             </div>
