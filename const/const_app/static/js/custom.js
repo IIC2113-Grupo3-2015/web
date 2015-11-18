@@ -45,6 +45,13 @@ $(function() {
       window.location.href = "/profile/user/" + data;
   });
 
+  $('#back-prof').on('click', function(event){
+      event.preventDefault();
+      var data = $('#back-prof').data('uid');
+      console.log(data)
+      window.location.href = "/candidate/user/" + data;
+  });
+
   $('#make-comment').on('click', function(event){
       event.preventDefault();
       console.log("form submitted!")  // sanity check

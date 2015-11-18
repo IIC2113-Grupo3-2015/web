@@ -21,8 +21,7 @@
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
         </div>
         <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
-          <a href="/candidate/user/{{post.post_author.id}}" class="mdl-layout__tab is-active"> <i class="fa fa-user fa-2x"></i> </a>
-          <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--accent" id="back-prof" data-userid="{{ user.id }}">
+          <button data-uid="{{ post.post_author.id }}" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--accent" id="back-prof" data-userid="{{ user.id }}">
             <i class="fa fa-arrow-left"></i>  <!-- bell -->
             <span class="visuallyhidden">Add</span>
           </button>
@@ -84,6 +83,13 @@
           <div class="mdl-mega-footer--bottom-section">
             <div class="mdl-logo">
               Made by Grupo 3 DDS
+            </div>
+            <div>
+              {% if user.userprofile.role == 'candidate' %}
+              <a class="myprofile" href="/candidate/user/{{ user.id }}"> <i class="fa fa-user"></i> Mi Perfil </a>
+              {% else %}
+              <a class="myprofile" href="/profile/user/{{ user.id }}"> <i class="fa fa-user"></i> Mi Perfil </a>
+              {% endif %}
             </div>
           </div>
         </footer>
