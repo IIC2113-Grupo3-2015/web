@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 from django.template.context_processors import csrf
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -12,6 +12,7 @@ import json
 from random import randint
 import psycopg2
 import requests
+from django.views.decorators.csrf import csrf_exempt
 
 def index(request):
     # Este método es llamado cada vez que se necesita ir a la página de
@@ -259,3 +260,57 @@ def graph(username):
     radar_chart.add('Candidato', values)
     g = radar_chart.render(fill = True)
     return g
+
+
+# API Section
+
+def JSONResponse(data):
+    return HttpResponse(
+        json.dumps(data),
+        content_type="application/json"
+        )
+
+def JSONResponseNotFound(data):
+    return HttpResponseNotFound(
+        json.dumps(data),
+        content_type="application/json"
+        )
+
+def api_post_get(request, post_id):
+    try:
+        post = Post.objects.get(id = post_id)
+
+        if request.method == 'GET':
+            username = post.post_author.username
+            comments = post.comment_set.all()
+            has_comments = len(comments) > 0
+
+            data = {
+                'post': post.as_json(),
+                'comments': [c.as_json() for c in comments]
+                }
+
+            return JSONResponse(data)
+
+    except:
+        pass
+
+    return JSONResponseNotFound({ 'error': True })
+
+@csrf_exempt
+def api_post_delete(request, post_id):
+    # El usuario candidato ejecuta esta función cuando elimina un post
+    # en su perfil. El usuario que hace el request debe ser el dueño del post.
+    # Los datos son pasados mediante DELETE HTTP.
+    try:
+        post = Post.objects.get(id = post_id)
+
+        if request.method == 'DELETE':
+            if request.user == post.post_author:
+                post.delete()
+                return JSONResponse({ 'ok': True })
+
+    except:
+        pass
+
+    return JSONResponse({ 'error': True })
