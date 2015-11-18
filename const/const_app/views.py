@@ -60,39 +60,7 @@ def candidate_profile_page(request, user_id):
     is_self_user = required_user.id == request.user.id
     posts = required_user.post_set.all()
 
-    # Gráfico
-    pos_host = 'localhost'
-    pos_port = 5432
-    pos_db = 'scrapper'
-    pos_user = 'scrapper'
-    pos_pass = 'scrapper'
-
-    #conn = psycopg2.connect(database=pos_db, user=pos_user, password=pos_pass, host=pos_host, port=pos_port)
-    #cur = conn.cursor()
-
-    try:
-        #cur.execute("SELECT * FROM proms WHERE idcandidato = '" + str(required_user.username).lower() + "';")
-
-        #rows = cur.fetchall()
-
-        labels = ["a", "b", "c"]
-        values = [1, 2, 3]
-
-        #for row in rows:
-            #labels.append(row[1])
-            #values.append(row[2])
-
-    except:
-        print("Error")
-    s = Style(colors=('#5DA5DA', '#000000'))
-    radar_chart = pygal.Radar(style = s)
-    radar_chart.title = 'Emociones'
-    radar_chart.x_labels = labels
-    radar_chart.add('Candidato', values)
-    g = radar_chart.render(fill = True)
-
-
-
+    g = graph(required_user.username)
 
     #cur.close()
     #conn.close()
@@ -260,3 +228,34 @@ def register(request):
     # Se ejecuta cuando se registra un nuevo usuario en el sistema.
     pass
     # El usuario se guarda en la db
+
+def graph(username):
+    pos_host = 'localhost'
+    pos_port = 5432
+    pos_db = 'scrapper'
+    pos_user = 'scrapper'
+    pos_pass = 'scrapper'
+
+    #conn = psycopg2.connect(database=pos_db, user=pos_user, password=pos_pass, host=pos_host, port=pos_port)
+    #cur = conn.cursor()
+
+    try:
+        #cur.execute("SELECT * FROM proms WHERE idcandidato = '" + str(username).lower() + "';")
+        #rows = cur.fetchall()
+
+        labels = ["a", "b", "c"]
+        values = [1, 2, 3]
+
+        #for row in rows:
+            #labels.append(row[1])
+            #values.append(row[2])
+    except:
+        print("Error")
+
+    s = Style(colors=('#5DA5DA', '#000000'))
+    radar_chart = pygal.Radar(style = s)
+    radar_chart.title = 'Emociones'
+    radar_chart.x_labels = labels
+    radar_chart.add('Candidato', values)
+    g = radar_chart.render(fill = True)
+    return g
