@@ -21,7 +21,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Material Design Lite</title>
+    <title>ConstituSiente</title>
 
     <!-- Add to homescreen for Chrome on Android -->
     <meta name="mobile-web-app-capable" content="yes">
@@ -47,18 +47,18 @@
     <link rel="stylesheet" type="text/css" href="{% static 'mdi/css/materialdesignicons.css' %}" />
 
     <link rel="stylesheet" type="text/css" href="{% static 'font-awesome-4.4.0/css/font-awesome.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'mdl-templates/material.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'mdl-templates/material.min.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'mdl-templates/templates/text-only/styles.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'font-awesome-4.4.0/css/font-awesome.css' %}" />
     {% compress css %}
       <link rel="stylesheet" type="text/scss" href="{% static 'css/style.scss' %}" />
     {% endcompress %}
-
   </head>
 
   <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
     {% block body_block %}{% endblock %}
   </body>
+
   <script type="text/javascript" src="{% static 'js/jquery-2.1.4.js' %}"></script>
   <script type="text/javascript" src="{% static 'js/custom.js' %}"></script>
   <script type="text/javascript" src="{% static 'mdl-templates/material.js' %}"></script>

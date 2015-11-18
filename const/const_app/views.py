@@ -11,6 +11,7 @@ from pygal.style import Style
 import json
 from random import randint
 import psycopg2
+import requests
 
 def index(request):
     # Este método es llamado cada vez que se necesita ir a la página de
@@ -65,22 +66,22 @@ def candidate_profile_page(request, user_id):
     pos_db = 'scrapper'
     pos_user = 'scrapper'
     pos_pass = 'scrapper'
-    
-    conn = psycopg2.connect(database=pos_db, user=pos_user, password=pos_pass, host=pos_host, port=pos_port)
-    cur = conn.cursor()
-    
+
+    #conn = psycopg2.connect(database=pos_db, user=pos_user, password=pos_pass, host=pos_host, port=pos_port)
+    #cur = conn.cursor()
+
     try:
-        cur.execute("SELECT * FROM proms WHERE idcandidato = '" + str(required_user.username).lower() + "';")
-        
-        rows = cur.fetchall()
-        
-        labels = []
-        values = []
-        
-        for row in rows:
-            labels.append(row[1])
-            values.append(row[2])
-            
+        #cur.execute("SELECT * FROM proms WHERE idcandidato = '" + str(required_user.username).lower() + "';")
+
+        #rows = cur.fetchall()
+
+        labels = ["a", "b", "c"]
+        values = [1, 2, 3]
+
+        #for row in rows:
+            #labels.append(row[1])
+            #values.append(row[2])
+
     except:
         print("Error")
     s = Style(colors=('#5DA5DA', '#000000'))
@@ -90,8 +91,11 @@ def candidate_profile_page(request, user_id):
     radar_chart.add('Candidato', values)
     g = radar_chart.render(fill = True)
 
-    cur.close()
-    conn.close()
+
+
+
+    #cur.close()
+    #conn.close()
 
     context = {'required_user': required_user, 'is_self_user': is_self_user,
                 'posts': posts, 'graph': g}
@@ -142,11 +146,19 @@ def create_post_page(request):
     return render(request, 'const/createpost.html', context)
     # El post es guardado en la base de datos
 
-def delete_post_entry(request):
-    # El usuario candidato ejecuta esta función cuando elimina un post
-    # en su perfil. El usuario que hace el request debe ser el dueño del post.
+def delete_comment(request):
+    # El usuario candidato ejecuta esta función cuando elimina un comentario
+    # en un post. El usuario que hace el request debe ser el dueño del post.
     # Los datos son pasados mediante POST HTTP.
-    pass
+    if request.method == 'POST':
+        comment_id = request.POST.get('comment_id')
+        comment = Comment.objects.get(id = comment_id)
+        if request.user == comment.user:
+            comment.delete()
+    return HttpResponse(
+                    json.dumps({'ok': 1}),
+                    content_type="application/json"
+                        )
     # Se elimina el post de la DB.
 
 @login_required
@@ -161,18 +173,27 @@ def create_comment(request):
                     content = content,
                     user = request.user)
         myComment.save()
+        cid = myComment.id
         userImage = request.user.userprofile.picture.url
     return HttpResponse(
-                    json.dumps({'cont': content, 'userImage': userImage}),
+                    json.dumps({'cont': content, 'userImage': userImage, 'cid': cid}),
                     content_type="application/json"
                         )
     # El post queda guardado en la db.
 
 def delete_post(request):
-    # El usuario ejecuta esta función al eliminar un comentario de un post.
-    # Se requiere login. Los valores se pasan mediante POST HTTP.
+    # El usuario candidato ejecuta esta función cuando elimina un post
+    # en su perfil. El usuario que hace el request debe ser el dueño del post.
+    # Los datos son pasados mediante POST HTTP.
     if request.method == 'POST':
-        print(request.POST.get('post_id'))
+        post_id = request.POST.get('post_id')
+        post = Post.objects.get(id = post_id)
+        if request.user == post.post_author:
+            post.delete()
+    return HttpResponse(
+                    json.dumps({'ok': 1}),
+                    content_type="application/json"
+                        )
     # El post queda eliminado de la db.
 
 def give_stars_comment(request):

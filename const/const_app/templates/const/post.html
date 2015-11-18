@@ -20,6 +20,13 @@
         </div>
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
         </div>
+        <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
+          <a href="/candidate/user/{{post.post_author.id}}" class="mdl-layout__tab is-active"> <i class="fa fa-user fa-2x"></i> </a>
+          <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--accent" id="back-prof" data-userid="{{ user.id }}">
+            <i class="fa fa-arrow-left"></i>  <!-- bell -->
+            <span class="visuallyhidden">Add</span>
+          </button>
+        </div>
       </header>
       <main class="mdl-layout__content">
         <div class="mdl-layout__tab-panel is-active" id="overview">

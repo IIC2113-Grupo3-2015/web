@@ -110,6 +110,13 @@ html, body {
   z-index: 999;
 }
 
+.mdl-demo #back-prof {
+  position: absolute;
+  right: 40px;
+  top: 36px;
+  z-index: 999;
+}
+
 .mdl-demo #refresh-cand {
   position: absolute;
   right: 40px;
