@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, JsonResponse
 from django.template.context_processors import csrf
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -264,13 +264,7 @@ def graph(username):
 
 # API Section
 
-def JSONResponse(data):
-    return HttpResponse(
-        json.dumps(data),
-        content_type="application/json"
-        )
-
-def JSONResponseNotFound(data):
+def JsonResponseNotFound(data):
     return HttpResponseNotFound(
         json.dumps(data),
         content_type="application/json"
@@ -283,6 +277,7 @@ def user_to_json(user):
         )
 
 def api_post_get(request, post_id):
+    # Se obtiene el post y todos los comentarios de este.
     try:
         post = Post.objects.get(id = post_id)
 
@@ -296,12 +291,12 @@ def api_post_get(request, post_id):
                 'comments': [c.as_json() for c in comments]
                 }
 
-            return JSONResponse(data)
+            return JsonResponse(data)
 
     except:
         pass
 
-    return JSONResponseNotFound({ 'error': True })
+    return JsonResponseNotFound({ 'error': True })
 
 @csrf_exempt
 def api_post_delete(request, post_id):
@@ -315,12 +310,12 @@ def api_post_delete(request, post_id):
         if request.method == 'DELETE':
             if request.user == post.post_author:
                 post.delete()
-                return JSONResponse({ 'ok': True })
+                return JsonResponse({ 'ok': True })
 
     except:
         pass
 
-    return JSONResponse({ 'error': True })
+    return JsonResponse({ 'error': True })
 
 
 def api_candidate_show(request, user_id):
@@ -331,7 +326,7 @@ def api_candidate_show(request, user_id):
         required_user = User.objects.get(id = user_id)
 
         if required_user.userprofile.role != 'candidate':
-            return JSONResponse({ 'error': True })
+            return JsonResponse({ 'error': True })
         
         posts = required_user.post_set.all()
         g = graph(required_user.username)
@@ -340,9 +335,9 @@ def api_candidate_show(request, user_id):
             'required_user': user_to_json(required_user),
             'posts': [p.as_json() for p in posts],
             'graph': str(g)}
-        return JSONResponse(data)
+        return JsonResponse(data)
 
     except:
         pass
 
-    return JSONResponse({ 'error': True })
+    return JsonResponse({ 'error': True })
