@@ -14,6 +14,16 @@ import psycopg2
 import requests
 from django.views.decorators.csrf import csrf_exempt
 
+def generic_delete(request, Model, param):
+    if request.method == 'POST':
+        model_id = request.POST.get(param)
+        model = Model.objects.get(id = model_id)
+        if request.user == model.user:
+            model.delete()
+    return HttpResponse(
+                json.dumps({'ok': 1}),
+                content_type="application/json"
+                )
 def index(request):
     # Este método es llamado cada vez que se necesita ir a la página de
     # bienvenida. No necesita login.
@@ -119,15 +129,7 @@ def delete_comment(request):
     # El usuario candidato ejecuta esta función cuando elimina un comentario
     # en un post. El usuario que hace el request debe ser el dueño del post.
     # Los datos son pasados mediante POST HTTP.
-    if request.method == 'POST':
-        comment_id = request.POST.get('comment_id')
-        comment = Comment.objects.get(id = comment_id)
-        if request.user == comment.user:
-            comment.delete()
-    return HttpResponse(
-                    json.dumps({'ok': 1}),
-                    content_type="application/json"
-                        )
+    return generic_delete(request, Comment, 'comment_id')
     # Se elimina el post de la DB.
 
 @login_required
@@ -154,15 +156,7 @@ def delete_post(request):
     # El usuario candidato ejecuta esta función cuando elimina un post
     # en su perfil. El usuario que hace el request debe ser el dueño del post.
     # Los datos son pasados mediante POST HTTP.
-    if request.method == 'POST':
-        post_id = request.POST.get('post_id')
-        post = Post.objects.get(id = post_id)
-        if request.user == post.post_author:
-            post.delete()
-    return HttpResponse(
-                    json.dumps({'ok': 1}),
-                    content_type="application/json"
-                        )
+    return generic_delete(request, Post, 'post_id')
     # El post queda eliminado de la db.
 
 def give_stars_comment(request):
