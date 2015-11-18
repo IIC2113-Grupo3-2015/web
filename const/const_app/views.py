@@ -276,6 +276,12 @@ def JSONResponseNotFound(data):
         content_type="application/json"
         )
 
+def user_to_json(user):
+    return dict(
+        id=user.id,
+        username=user.username
+        )
+
 def api_post_get(request, post_id):
     try:
         post = Post.objects.get(id = post_id)
@@ -299,6 +305,7 @@ def api_post_get(request, post_id):
 
 @csrf_exempt
 def api_post_delete(request, post_id):
+    # TODO authentication
     # El usuario candidato ejecuta esta función cuando elimina un post
     # en su perfil. El usuario que hace el request debe ser el dueño del post.
     # Los datos son pasados mediante DELETE HTTP.
@@ -309,6 +316,31 @@ def api_post_delete(request, post_id):
             if request.user == post.post_author:
                 post.delete()
                 return JSONResponse({ 'ok': True })
+
+    except:
+        pass
+
+    return JSONResponse({ 'error': True })
+
+
+def api_candidate_show(request, user_id):
+    # Este método se llama cuando se quiere ir a la página de un candidato
+    # usando una cuenta de candidato. Se debe estar logeado con el usuario
+    # respectivo.
+    try:
+        required_user = User.objects.get(id = user_id)
+
+        if required_user.userprofile.role != 'candidate':
+            return JSONResponse({ 'error': True })
+        
+        posts = required_user.post_set.all()
+        g = graph(required_user.username)
+
+        data = {
+            'required_user': user_to_json(required_user),
+            'posts': [p.as_json() for p in posts],
+            'graph': str(g)}
+        return JSONResponse(data)
 
     except:
         pass
