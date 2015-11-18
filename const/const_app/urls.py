@@ -15,4 +15,8 @@ urlpatterns = [
     url(r'^create_post/$', views.create_post, name='create_post'),
     url(r'^delete_post/$', views.delete_post, name='delete_post'),
     url(r'^delete_comment/$', views.delete_comment, name='delete_comment'),
+    # API
+    url(r'^api/post/(?P<post_id>[\d]+)/$', views.api_post_get, name='view_post'),
+    #url(r'^api/post/(?P<post_id>[\d]+)/delete$', views.api_post_delete, name='delet_post'),
+    url(r'^api/candidate/(?P<user_id>[\d]+)/$', views.api_candidate_show, name='profile'),
 ]

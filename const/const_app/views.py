@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, JsonResponse
 from django.template.context_processors import csrf
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -12,6 +12,7 @@ import json
 from random import randint
 import psycopg2
 import requests
+from django.views.decorators.csrf import csrf_exempt
 
 def index(request):
     # Este método es llamado cada vez que se necesita ir a la página de
@@ -289,3 +290,84 @@ def graph(username):
     radar_chart.add('Candidato', values)
     g = radar_chart.render(fill = True)
     return g
+
+
+# API Section
+
+def JsonResponseNotFound(data):
+    return HttpResponseNotFound(
+        json.dumps(data),
+        content_type="application/json"
+        )
+
+def user_to_json(user):
+    return dict(
+        id=user.id,
+        username=user.username
+        )
+
+def api_post_get(request, post_id):
+    # Se obtiene el post y todos los comentarios de este.
+    try:
+        post = Post.objects.get(id = post_id)
+
+        if request.method == 'GET':
+            username = post.post_author.username
+            comments = post.comment_set.all()
+            has_comments = len(comments) > 0
+
+            data = {
+                'post': post.as_json(),
+                'comments': [c.as_json() for c in comments]
+                }
+
+            return JsonResponse(data)
+
+    except:
+        pass
+
+    return JsonResponseNotFound({ 'error': True })
+
+@csrf_exempt
+def api_post_delete(request, post_id):
+    # TODO authentication
+    # El usuario candidato ejecuta esta función cuando elimina un post
+    # en su perfil. El usuario que hace el request debe ser el dueño del post.
+    # Los datos son pasados mediante DELETE HTTP.
+    try:
+        post = Post.objects.get(id = post_id)
+
+        if request.method == 'DELETE':
+            if request.user == post.post_author:
+                post.delete()
+                return JsonResponse({ 'ok': True })
+
+    except:
+        pass
+
+    return JsonResponse({ 'error': True })
+
+
+def api_candidate_show(request, user_id):
+    # Este método se llama cuando se quiere ir a la página de un candidato
+    # usando una cuenta de candidato. Se debe estar logeado con el usuario
+    # respectivo.
+    try:
+        required_user = User.objects.get(id = user_id)
+
+        if required_user.userprofile.role != 'candidate':
+            return JsonResponse({ 'error': True })
+        
+        posts = required_user.post_set.all()
+        g = graph(required_user.username)
+
+        data = {
+            'required_user': user_to_json(required_user),
+            'posts': [p.as_json() for p in posts],
+            'graph': str(g)}
+        return JsonResponse(data)
+
+    except:
+        pass
+
+    return JsonResponse({ 'error': True })

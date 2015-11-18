@@ -29,8 +29,24 @@ class Post(models.Model):
     post_text = models.TextField()
     post_author = models.ForeignKey(User)
     pub_date = models.DateTimeField('date published')
+    def as_json(self):
+        return dict(
+            id=self.id,
+            post_title=self.post_title,
+            post_text=self.post_text,
+            post_author_id=self.post_author.id,
+            post_author_username=self.post_author.username,
+            pub_date=self.pub_date.isoformat()
+            )
 
 class Comment(models.Model):
     post = models.ForeignKey(Post)
     user = models.ForeignKey(User)
     content = models.TextField()
+    def as_json(self):
+        return dict(
+            id=self.id,
+            post_id=self.post.id,
+            user_id=self.user.id,
+            content=self.content
+            )
