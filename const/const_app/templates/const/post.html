@@ -84,12 +84,16 @@
             <div class="mdl-logo">
               Made by Grupo 3 DDS
             </div>
+            <br>
             <div>
               {% if user.userprofile.role == 'candidate' %}
               <a class="myprofile" href="/candidate/user/{{ user.id }}"> <i class="fa fa-user"></i> Mi Perfil </a>
               {% else %}
               <a class="myprofile" href="/profile/user/{{ user.id }}"> <i class="fa fa-user"></i> Mi Perfil </a>
               {% endif %}
+            </div>
+            <div>
+              <a class="myprofile" href="/logout"> <i class="fa fa-sign-out"></i> Salir </a>
             </div>
           </div>
         </footer>

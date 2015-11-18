@@ -4,7 +4,7 @@ from django.template.context_processors import csrf
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .models import Post, Comment
+from .models import Post, Comment, UserProfile
 from django.utils import timezone
 import pygal
 from pygal.style import Style
@@ -226,7 +226,37 @@ def user_logout(request):
 
 def register(request):
     # Se ejecuta cuando se registra un nuevo usuario en el sistema.
-    pass
+    if request.method == 'POST':
+        try:
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            cpassword = request.POST.get('cpassword')
+            about = request.POST.get('about')
+            picture = request.FILES.get('picture')
+            if password == cpassword:
+                user = User(username = username)
+                user.set_password(password)
+                user.save()
+                up = UserProfile(user = user, picture = picture, role="common",
+                                about = about)
+                up.save()
+                return HttpResponse(
+                            json.dumps({'redirect': "/login/"}),
+                            content_type="application/json"
+                                        )
+            else:
+                return HttpResponse(
+                            json.dumps({}),
+                            content_type="application/json"
+                                        )
+        except:
+            return HttpResponse(
+                        json.dumps({'redirect': "/login/"}),
+                        content_type="application/json"
+                                    )
+
+    else:
+        return render(request, 'const/register.html', {})
     # El usuario se guarda en la db
 
 def graph(username):

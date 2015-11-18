@@ -32,10 +32,57 @@ $(function() {
     });
   }
 
+  function register() {
+    var formdata = new FormData();
+    var file = $("#picture-field")[0].files[0];
+    console.log(file);
+    formdata.append("picture", file);
+    formdata.append("username", $('#username-field').val());
+    formdata.append("password", $('#password-field').val());
+    formdata.append("cpassword", $('#cpassword-field').val());
+    formdata.append("about", $('#about-field').val());
+    console.log(formdata);
+    $.ajax({
+        url : "",
+        type : "POST",
+        data : formdata,
+        processData: false,
+        contentType: false,
+        success : function(json) {
+            if (json.redirect) {
+            // data.redirect contains the string URL to redirect to
+              window.location.href = json.redirect;
+            }
+            else {
+              $('#password-field').val('');
+              console.log(json); // log the returned json to the console
+              $("#failed-notice").html("<div id='failed-div-top' class='failed-login mdl-card mdl-shadow--2dp'> Login incorrecto </div>");
+              setTimeout(function() {
+                  $("#failed-div-top").fadeOut().empty();
+                }, 3000);
+              console.log("success"); // another sanity check
+            }
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
+                " <a href='#' class='close'>&times;</a></div>");
+            console.log(xhr.status + ": " + xhr.responseText);
+        }
+    });
+  }
+
   $('#login-button').on('click', function(event){
       event.preventDefault();
       console.log("form submitted!")  // sanity check
       login();
+  });
+
+  $('#register-button').on('click', function(event){
+      event.preventDefault();
+      console.log("form submitted!")  // sanity check
+      register();
   });
 
   $('#refresh-prof').on('click', function(event){
