@@ -56,7 +56,7 @@ def user_profile(request, user_id):
     conn = psycopg2.connect(database=POSTGRES_DB, user=POSTGRES_USER, password=POSTGRES_USER, host=POSTGRES_HOST, port=POSTGRES_PORT)
 
     cur = conn.cursor()
-    cur.execute("SELECT * FROM LaLupa LIMIT 3;",
+    cur.execute("SELECT * FROM La_Lupa LIMIT 3;",
                 (str(required_user.username).lower(),)
                 )
     lupa = cur.fetchall()
@@ -125,9 +125,19 @@ def candidate_profile_page(request, user_id):
 
 
 
+
     context = {'required_user': required_user, 'is_self_user': is_self_user,
                'posts': posts, 'graph': g, 'word_cloud': wc, 'postw': t1[6], 'negtw': t2[6],
                'posurl': t1[5], 'negurl': t2[5]}
+    if t1 == None:
+        context['pos'] = False:
+    else:
+        context['pos'] = True:
+    if t2 == None:
+        context['neg'] = False:
+    else:
+        context['neg'] = True
+
     return render(request, 'const/candidate.html', context)
     # El método te lleva al perfil del usuario candidato
 
