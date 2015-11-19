@@ -57,21 +57,23 @@ def get_words_cloud(name):
 
     name = normalize(name)
     words = []
+    try:
+        cur = db_cursor()
+        cur.execute("SELECT relacionado, cantidad FROM relaciones_candidatos WHERE nombre LIKE (%s) ",
+                    (name, ))
+        rows = cur.fetchall()
 
-    cur = db_cursor()
-    cur.execute("SELECT relacionado, cantidad FROM relaciones_candidatos WHERE nombre LIKE (%s) ",
-                (name, ))
-    rows = cur.fetchall()
+        for row in rows:
+            words.append([row[0], row[1]])
 
-    for row in rows:
-        words.append([row[0], row[1]])
+        cur.execute("SELECT entidad, cantidad FROM candidatos_entidades WHERE nombre LIKE (%s) ",
+                    (name, ))
+        rows = cur.fetchall()
 
-    cur.execute("SELECT entidad, cantidad FROM candidatos_entidades WHERE nombre LIKE (%s) ",
-                (name, ))
-    rows = cur.fetchall()
-
-    for row in rows:
-        words.append([row[0], row[1]])
+        for row in rows:
+            words.append([row[0], row[1]])
+    except:
+        print("error wc")
 
 
 
