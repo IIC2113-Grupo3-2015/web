@@ -304,7 +304,7 @@ $(document).ready(function(){
       "printMultiplier" : 2, // set to 3 for nice printer output; higher numbers take longer
       "sort" : "highest" // highest, lowest or random
     },
-    "font" : "Roboto', sans-serif", //  the CSS font-family string
+    //"font" : "Roboto', sans-serif", //  the CSS font-family string
     "shape" : "circle" // one of "circle", "square", "diamond", "triangle", "triangle-forward", "x", "pentagon" or "star"; this can also be a function with the following prototype - function( theta ) {}
   });
 });
