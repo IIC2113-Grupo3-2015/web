@@ -72,7 +72,7 @@ def candidate_profile_page(request, user_id):
     posts = required_user.post_set.all()
 
     g = graph(required_user.username)
-    wc = get_words_cloud("%s %s" % (required_user.first_name, required_user.last_name))
+    wc = get_words_cloud("%s %s" % (required_user.first_name.lower(), required_user.last_name.lower()))
 
     POSTGRES_HOST = 'localhost'
     POSTGRES_PORT = 5432
@@ -84,7 +84,7 @@ def candidate_profile_page(request, user_id):
 
     cur = conn.cursor()
     cur.execute("SELECT * FROM tops WHERE idCandidato = (%s) AND emocion=Posemo LIMIT 1;",
-                (str(required_user.name).lower(),)
+                (str(required_user.username).lower(),)
                 )
     t1 = cur.fetchone()
     print(t1)
