@@ -81,6 +81,13 @@ def candidate_profile_page(request, user_id):
     # El método te lleva al perfil del usuario candidato
 
 @login_required
+def home(request):
+    users = UserProfile.objects.filter(role = "candidate")
+    for u in users:print(u.user)
+    context = {'candidates': users}
+    return render(request, 'const/home.html', context)
+
+@login_required
 def view_post(request, post_id):
     post = Post.objects.get(id = post_id)
     username = post.post_author.username

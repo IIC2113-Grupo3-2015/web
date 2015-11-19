@@ -1,0 +1,64 @@
+{% extends 'const/layout.html' %}
+
+{% block body_block %}
+
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+      <header class="mdl-layout__header mdl-layout__header--scroll mdl-color--primary">
+        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
+        </div>
+        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
+        </div>
+        <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
+          <a href="#overview" class="mdl-layout__tab is-active">Candidatos</a>
+          <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--accent" id="refresh-prof" data-userid="{{ user.id }}">
+            <i class="fa fa-refresh"></i>  <!-- bell -->
+            <span class="visuallyhidden">Add</span>
+          </button>
+        </div>
+      </header>
+      <main class="mdl-layout__content">
+        <div class="mdl-layout__tab-panel is-active" id="overview">
+          {% for candidate in candidates%}
+            <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+              <header class="section__play-btn mdl-cell mdl-cell--3-col-desktop mdl-cell--2-col-tablet mdl-cell--4-col-phone mdl-color--accent mdl-color-text--white">
+                <img class="profile-image" src="{{ candidate.userprofile.picture.url }}" alt="Mountain View"> </img>
+              </header>
+              <div class="mdl-card mdl-cell mdl-cell--9-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone">
+                <div class="mdl-card__supporting-text">
+                  <h3><i class="fa fa-star"></i> {{ candidate.username }}</h3>
+                  <h5>{{ candidate.about }}</h5>
+                </div>
+                <div class="mdl-card__actions">
+                  <a href="/candidate/user/{{ candidate.id }}" class="mdl-button">Ver más</a>
+                </div>
+              </div>
+
+            </section>
+
+          {% endfor %}
+
+
+        </div>
+
+        <footer class="mdl-mega-footer">
+          <div class="mdl-mega-footer--bottom-section">
+            <div class="mdl-logo">
+              Made by Grupo 3 DDS
+            </div>
+            <br>
+            <div>
+              {% if user.userprofile.role == 'candidate' %}
+              <a class="myprofile" href="/candidate/user/{{ user.id }}"> <i class="fa fa-user"></i> Mi Perfil </a>
+              {% else %}
+              <a class="myprofile" href="/profile/user/{{ user.id }}"> <i class="fa fa-user"></i> Mi Perfil </a>
+              {% endif %}
+            </div>
+            <div>
+              <a class="myprofile" href="/logout"> <i class="fa fa-sign-out"></i> Salir </a>
+            </div>
+          </div>
+        </footer>
+      </main>
+    </div>
+
+{% endblock %}
