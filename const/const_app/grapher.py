@@ -64,14 +64,14 @@ def get_words_cloud(name):
     rows = cur.fetchall()
 
     for row in rows:
-        words << [row[0], row[1]]
+        words.append([row[0], row[1]])
 
     cur.execute("SELECT entidad, cantidad FROM candidatos_entidades WHERE nombre LIKE (%s) ",
                 (name, ))
     rows = cur.fetchall()
 
     for row in rows:
-        words << [row[0], row[1]]
+        words.append([row[0], row[1]])
 
 
 
