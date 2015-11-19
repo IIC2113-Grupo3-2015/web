@@ -73,17 +73,34 @@ def candidate_profile_page(request, user_id):
     g = graph(required_user.username)
     wc = get_words_cloud("%s %s" % (required_user.first_name, required_user.last_name))
 
+    POSTGRES_HOST = 'localhost'
+    POSTGRES_PORT = 5432
+    POSTGRES_DB = 'scrapper'
+    POSTGRES_USER = 'scrapper'
+    POSTGRES_PASS = 'scrapper'
+
+    conn = psycopg2.connect(database=POSTGRES_DB, user=POSTGRES_USER, password=POSTGRES_USER, host=POSTGRES_HOST, port=POSTGRES_PORT)
+
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM tops WHERE idCandidato = (%s) AND emocion=Posemo LIMIT 1;",
+                (str(username).lower(),)
+                )
+    t1 = cur.fetchone()
+    print(t1)
+    cur.close()
+    conn.close()
+
     print(wc)
 
     context = {'required_user': required_user, 'is_self_user': is_self_user,
-               'posts': posts, 'graph': g, 'word_cloud': wc}
+               'posts': posts, 'graph': g, 'word_cloud': wc, 'postw': t}
     return render(request, 'const/candidate.html', context)
     # El método te lleva al perfil del usuario candidato
 
 
 def home(request):
     users = UserProfile.objects.filter(role = "candidate")
-    for u in users:print(u.user)
+    print(users)
     context = {'candidates': users}
     return render(request, 'const/home.html', context)
 
@@ -330,7 +347,7 @@ def api_candidate_show(request, user_id):
 
         if required_user.userprofile.role != 'candidate':
             return JsonResponse({ 'error': True })
-        
+
         posts = required_user.post_set.all()
         g = graph(required_user.username)
 

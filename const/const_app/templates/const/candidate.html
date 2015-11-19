@@ -70,7 +70,10 @@
             </div>
             <div class="section__text mdl-cell mdl-cell--4-col-desktop mdl-cell--6-col-tablet mdl-cell--3-col-phone">
               <h5>Tweet</h5>
-              {{ tweet | safe }}
+              <p>{{ postw[0] }}</p>
+              <p>{{ postw[1] }}</p>
+              <p>{{ postw[2] }}</p>
+              <p>{{ postw[3] }}</p>
 
             </div>
             <div class="section__circle-container mdl-cell mdl-cell--2-col mdl-cell--1-col-phone">
@@ -90,7 +93,7 @@
             </div>
             <div class="mdl-cell mdl-cell--12-col">
               <h4>Features</h4>
-                <div id="wordcloud" class="wordcloud"> 
+                <div id="wordcloud" class="wordcloud">
                   {% for name, weight in word_cloud %}
                     <span data-weight="{{ weight }}" style="display: none;">{{ name }}</span>
                   {% endfor %}
