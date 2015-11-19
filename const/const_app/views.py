@@ -130,11 +130,11 @@ def candidate_profile_page(request, user_id):
                'posts': posts, 'graph': g, 'word_cloud': wc, 'postw': t1[6], 'negtw': t2[6],
                'posurl': t1[5], 'negurl': t2[5]}
     if t1 == None:
-        context['pos'] = False:
+        context['pos'] = False
     else:
-        context['pos'] = True:
+        context['pos'] = True
     if t2 == None:
-        context['neg'] = False:
+        context['neg'] = False
     else:
         context['neg'] = True
 
