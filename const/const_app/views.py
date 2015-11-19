@@ -115,27 +115,25 @@ def candidate_profile_page(request, user_id):
                 (str(required_user.username).lower(),)
                 )
     t2 = cur.fetchone()
-    print(t2)
 
     cur.close()
     conn.close()
 
-    print(wc)
-
-
-
 
     context = {'required_user': required_user, 'is_self_user': is_self_user,
-               'posts': posts, 'graph': g, 'word_cloud': wc, 'postw': t1[6], 'negtw': t2[6],
-               'posurl': t1[5], 'negurl': t2[5]}
+               'posts': posts, 'graph': g, 'word_cloud': wc}
     if t1 == None:
         context['pos'] = False
     else:
         context['pos'] = True
+        context['posurl'] = t1[5]
+        context['postw'] = t1[6]
     if t2 == None:
         context['neg'] = False
     else:
         context['neg'] = True
+        context['negurl'] = t2[5]
+        context['negtw'] = t2[6]
 
     return render(request, 'const/candidate.html', context)
     # El método te lleva al perfil del usuario candidato
