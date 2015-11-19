@@ -285,3 +285,26 @@ $(function() {
         }
     });
 });
+
+$(document).ready(function(){
+  $("#wordcloud").awesomeCloud({
+    "size" : {
+      "grid" : 0.005, // word spacing; smaller is more tightly packed but takes longer
+      "factor" : 0, // font resizing factor; default "0" means automatically fill the container
+      "normalize" : true // reduces outlier weights for a more attractive output
+    },
+    "color" : {
+      "background" : "rgb(104,119,125, 1)", // background color, transparent by default
+      "start" : "rgb(107,182,208)", // color of the smallest font, if options.color = "gradient""
+      "end" : "rgb(29,142,181)" // color of the largest font, if options.color = "gradient"
+    },
+    "options" : {
+      "color" : "gradient", // random-light, random-dark, gradient
+      "rotationRatio" : 0.35, // 0 is all horizontal, 1 is all vertical
+      "printMultiplier" : 2, // set to 3 for nice printer output; higher numbers take longer
+      "sort" : "highest" // highest, lowest or random
+    },
+    "font" : "Roboto', sans-serif", //  the CSS font-family string
+    "shape" : "circle" // one of "circle", "square", "diamond", "triangle", "triangle-forward", "x", "pentagon" or "star"; this can also be a function with the following prototype - function( theta ) {}
+  });
+});

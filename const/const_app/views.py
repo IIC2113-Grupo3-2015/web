@@ -6,11 +6,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import Post, Comment, UserProfile
 from django.utils import timezone
-import pygal
-from pygal.style import Style
+from .grapher import graph, get_words_cloud
 import json
 from random import randint
-import psycopg2
 import requests
 from django.views.decorators.csrf import csrf_exempt
 
@@ -24,6 +22,7 @@ def generic_delete(request, Model, param):
                 json.dumps({'ok': 1}),
                 content_type="application/json"
                 )
+
 def index(request):
     # Este método es llamado cada vez que se necesita ir a la página de
     # bienvenida. No necesita login.
@@ -72,12 +71,12 @@ def candidate_profile_page(request, user_id):
     posts = required_user.post_set.all()
 
     g = graph(required_user.username)
+    wc = get_words_cloud("%s %s" % (required_user.first_name, required_user.last_name))
 
-    #cur.close()
-    #conn.close()
+    print(wc)
 
     context = {'required_user': required_user, 'is_self_user': is_self_user,
-                'posts': posts, 'graph': g}
+               'posts': posts, 'graph': g, 'word_cloud': wc}
     return render(request, 'const/candidate.html', context)
     # El método te lleva al perfil del usuario candidato
 
@@ -89,7 +88,7 @@ def view_post(request, post_id):
     has_comments = len(comments) > 0
     print("HC", has_comments)
     context = {'post': post, 'username': username, 'comments': comments,
-            'has_comments': has_comments}
+               'has_comments': has_comments}
     return render(request, 'const/post.html', context)
 
 @login_required
@@ -187,8 +186,11 @@ def user_login(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(username=username, password=password)
+        print("post")
         if user:
+            print("user")
             if user.is_active:
+                print("active")
                 login(request, user)
                 uid = user.id
                 if user.userprofile.role == 'candidate':
@@ -254,36 +256,6 @@ def register(request):
         return render(request, 'const/register.html', {})
     # El usuario se guarda en la db
 
-def graph(username):
-    pos_host = 'localhost'
-    pos_port = 5432
-    pos_db = 'scrapper'
-    pos_user = 'scrapper'
-    pos_pass = 'scrapper'
-
-    #conn = psycopg2.connect(database=pos_db, user=pos_user, password=pos_pass, host=pos_host, port=pos_port)
-    #cur = conn.cursor()
-
-    try:
-        #cur.execute("SELECT * FROM proms WHERE idcandidato = '" + str(username).lower() + "';")
-        #rows = cur.fetchall()
-
-        labels = ["a", "b", "c"]
-        values = [1, 2, 3]
-
-        #for row in rows:
-            #labels.append(row[1])
-            #values.append(row[2])
-    except:
-        print("Error")
-
-    s = Style(colors=('#5DA5DA', '#000000'))
-    radar_chart = pygal.Radar(style = s)
-    radar_chart.title = 'Emociones'
-    radar_chart.x_labels = labels
-    radar_chart.add('Candidato', values)
-    g = radar_chart.render(fill = True)
-    return g
 
 
 # API Section
