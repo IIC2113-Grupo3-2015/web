@@ -46,11 +46,29 @@ def user_profile(request, user_id):
     required_user = User.objects.get(id = user_id)
     candidates = User.objects.all()
     candidates_posts = []
+
+    POSTGRES_HOST = 'localhost'
+    POSTGRES_PORT = 5432
+    POSTGRES_DB = 'scrapper'
+    POSTGRES_USER = 'scrapper'
+    POSTGRES_PASS = 'scrapper'
+
+    conn = psycopg2.connect(database=POSTGRES_DB, user=POSTGRES_USER, password=POSTGRES_USER, host=POSTGRES_HOST, port=POSTGRES_PORT)
+
+    cur = conn.cursor()
+    cur.execute("SELECT 3 FROM lupa LIMIT 3;",
+                (str(required_user.username).lower(),)
+                )
+    lupa = cur.fetchall()
+    print(lupa)
+    cur.close()
+    conn.close()
+
     for candidate in candidates:
         if candidate.username != 'admin' and candidate.userprofile.role == 'candidate':
             for post in candidate.post_set.all():
                 candidates_posts.append(post)
-    context = {'user': user, 'posts': candidates_posts}
+    context = {'user': user, 'posts': candidates_posts, 'lupa': lupa}
     if user.id != int(user_id) or user.userprofile.role == 'candidate':
         return HttpResponse("Error")
     return render(request, 'const/profile.html', context)
@@ -88,13 +106,21 @@ def candidate_profile_page(request, user_id):
                 )
     t1 = cur.fetchone()
     print(t1)
+
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM tops WHERE idCandidato = (%s) AND emocion='Negemo' LIMIT 1;",
+                (str(required_user.username).lower(),)
+                )
+    t2 = cur.fetchone()
+    print(t2)
+
     cur.close()
     conn.close()
 
     print(wc)
 
     context = {'required_user': required_user, 'is_self_user': is_self_user,
-               'posts': posts, 'graph': g, 'word_cloud': wc, 'postw': t}
+               'posts': posts, 'graph': g, 'word_cloud': wc, 'postw': t1, 'negtw': t2}
     return render(request, 'const/candidate.html', context)
     # El método te lleva al perfil del usuario candidato
 
