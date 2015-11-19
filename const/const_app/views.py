@@ -109,7 +109,7 @@ def candidate_profile_page(request, user_id):
     print(t1)
 
     cur = conn.cursor()
-    cur.execute("SELECT * FROM tops WHERE idCandidato = (%s) AND emocion='Negemo' LIMIT 3;",
+    cur.execute("SELECT * FROM tops WHERE emocion='Negemo' LIMIT 3;",
                 (str(required_user.username).lower(),)
                 )
     t2 = cur.fetchone()
