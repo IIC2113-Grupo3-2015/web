@@ -80,7 +80,7 @@ def candidate_profile_page(request, user_id):
     return render(request, 'const/candidate.html', context)
     # El método te lleva al perfil del usuario candidato
 
-@login_required
+
 def home(request):
     users = UserProfile.objects.filter(role = "candidate")
     for u in users:print(u.user)
