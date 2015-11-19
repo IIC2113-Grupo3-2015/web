@@ -83,7 +83,7 @@ def candidate_profile_page(request, user_id):
     conn = psycopg2.connect(database=POSTGRES_DB, user=POSTGRES_USER, password=POSTGRES_USER, host=POSTGRES_HOST, port=POSTGRES_PORT)
 
     cur = conn.cursor()
-    cur.execute("SELECT * FROM tops WHERE idCandidato = (%s) AND emocion=Posemo LIMIT 1;",
+    cur.execute("SELECT * FROM tops WHERE idCandidato = (%s) AND emocion='Posemo' LIMIT 1;",
                 (str(required_user.username).lower(),)
                 )
     t1 = cur.fetchone()
