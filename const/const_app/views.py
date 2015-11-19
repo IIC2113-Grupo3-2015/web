@@ -61,6 +61,9 @@ def user_profile(request, user_id):
                 )
     lupa = cur.fetchall()
     print(lupa)
+    aux = []
+    for l in lupa:
+        aux.append(l[0])
     cur.close()
     conn.close()
 
@@ -68,7 +71,7 @@ def user_profile(request, user_id):
         if candidate.username != 'admin' and candidate.userprofile.role == 'candidate':
             for post in candidate.post_set.all():
                 candidates_posts.append(post)
-    context = {'user': user, 'posts': candidates_posts, 'lupa': lupa}
+    context = {'user': user, 'posts': candidates_posts, 'lupa': aux}
     if user.id != int(user_id) or user.userprofile.role == 'candidate':
         return HttpResponse("Error")
     return render(request, 'const/profile.html', context)
@@ -120,8 +123,11 @@ def candidate_profile_page(request, user_id):
 
     print(wc)
 
+
+
     context = {'required_user': required_user, 'is_self_user': is_self_user,
-               'posts': posts, 'graph': g, 'word_cloud': wc, 'postw': t1, 'negtw': t2}
+               'posts': posts, 'graph': g, 'word_cloud': wc, 'postw': t1[6], 'negtw': t2[6],
+               'posurl': t1[5], 'negurl': t2[5]}
     return render(request, 'const/candidate.html', context)
     # El método te lleva al perfil del usuario candidato
 
