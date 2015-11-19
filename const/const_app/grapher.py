@@ -58,6 +58,7 @@ def get_words_cloud(name):
     name = normalize(name)
     words = []
     try:
+        cur = db_cursor()
         cur.execute("SELECT relacionado, cantidad FROM relaciones_candidatos WHERE nombre LIKE (%s) ",
                     (name, ))
         rows = cur.fetchall()
@@ -76,7 +77,3 @@ def get_words_cloud(name):
         print("Word Cloud Error")
 
     return words
-
-
-
-
