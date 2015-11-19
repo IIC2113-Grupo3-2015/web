@@ -56,7 +56,7 @@ def user_profile(request, user_id):
     conn = psycopg2.connect(database=POSTGRES_DB, user=POSTGRES_USER, password=POSTGRES_USER, host=POSTGRES_HOST, port=POSTGRES_PORT)
 
     cur = conn.cursor()
-    cur.execute("SELECT 3 FROM lupa LIMIT 3;",
+    cur.execute("SELECT * FROM LaLupa LIMIT 3;",
                 (str(required_user.username).lower(),)
                 )
     lupa = cur.fetchall()
@@ -105,6 +105,7 @@ def candidate_profile_page(request, user_id):
                 (str(required_user.username).lower(),)
                 )
     t1 = cur.fetchone()
+    print("tweet culiao")
     print(t1)
 
     cur = conn.cursor()
