@@ -13,7 +13,7 @@
         </div>
         <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
           <a href="#overview" class="mdl-layout__tab is-active">Candidatos</a>
-          
+
         </div>
       </header>
       <main class="mdl-layout__content">
@@ -54,6 +54,9 @@
               {% else %}
               <a class="myprofile" href="/profile/user/{{ user.id }}"> <i class="fa fa-user"></i> Mi Perfil </a>
               {% endif %}
+            </div>
+            <div>
+              <a class="myprofile" href="/home"> <i class="fa search-out"></i> Explorar </a>
             </div>
             <div>
               <a class="myprofile" href="/logout"> <i class="fa fa-sign-out"></i> Salir </a>
