@@ -11,6 +11,7 @@ import json
 from random import randint
 import requests
 from django.views.decorators.csrf import csrf_exempt
+import psycopg2
 
 def generic_delete(request, Model, param):
     if request.method == 'POST':
@@ -97,7 +98,7 @@ def candidate_profile_page(request, user_id):
     return render(request, 'const/candidate.html', context)
     # El método te lleva al perfil del usuario candidato
 
-
+@login_required
 def home(request):
     users = UserProfile.objects.filter(role = "candidate")
     print(users)
